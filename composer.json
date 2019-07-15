@@ -1,0 +1,20 @@
+{
+    "name": "webergiles/php-csc",
+    "description": "PHP code style check 利用git hook、phplint、phpcs在git commit的时候对php代码进行语法检测、代码风格检查，如果有问题，不允许提交。",
+    "type": "library",
+    "require": {
+        "php": ">=7.1",
+        "squizlabs/php_codesniffer": "3.*",
+        "overtrue/phplint": "1.1.9"
+    },
+    "require-dev": {
+        "php": "^7."
+    },
+    "authors": [
+        {
+            "name": "Giles.wang",
+            "email": "giles.wang@qq.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
