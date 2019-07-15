@@ -42,8 +42,8 @@ switch ($argv[1]) {
         break;
 }
 print <<<EOT
-install:    install php-cc,add pre-commit to .git/hooks,and rename the old pre-commit file to pre-commit.bak
-remove:     remove php-cc,remove .git/hooks/pre-commit,and mv pre-commit.bak to pre-commit
+install:    install php-csc,add pre-commit to .git/hooks,and rename the old pre-commit file to pre-commit.bak
+remove:     remove php-csc,remove .git/hooks/pre-commit,and mv pre-commit.bak to pre-commit
 config:     config item-key [set-value]
 EOT;
 exit(0);
