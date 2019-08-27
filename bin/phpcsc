@@ -57,10 +57,17 @@ function install()
         echo $phpCsCheckRs[0] . "\n";
     }
     # check&&back pre-commit
-    if (is_file('./.git/hooks/pre-commit')) {
-        //exec('mv ./.git/hooks/pre-commit ./.git/hooks/pre-commit.bak.' . time());
+    if (is_file('./.git/hooks/pre-commit')
+        && md5_file('./.git/hooks/pre-commit') != md5_file('./vendor/webergiles/php-csc/pre-commit')) {
+        exec('mv ./.git/hooks/pre-commit ./.git/hooks/pre-commit.bak.' . time());
     }
-    //exec('cp ./vendor/webergiles/php-csc/pre-commit ./.git/hooks');
+    if (is_file('./.git/hooks/pre-commit')
+        && md5_file('./.git/hooks/pre-commit') == md5_file('./vendor/webergiles/php-csc/pre-commit')) {
+        echo "php-csc install success!\n";
+        exit(0);
+    }
+
+    exec('cp ./vendor/webergiles/php-csc/pre-commit ./.git/hooks');
 
     echo "php-csc install success!\n";
     exit(0);

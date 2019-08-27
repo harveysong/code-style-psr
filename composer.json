@@ -22,8 +22,8 @@
         }
     ],
     "scripts": {
-        "post-package-install": "./bin/phpcsc install",
-        "post-package-update": "./bin/phpcsc install",
+        "post-update-cmd": "./bin/phpcsc install",
+        "post-install-cmd": "./bin/phpcsc install",
         "post-package-uninstall": "./bin/phpcsc remove"
 
     },
