@@ -68,7 +68,7 @@ do
             do
                 echo ${line}
             done
-            #askContinue
+            askContinue
             exit 1
         else
             echo "phplint file [$var] success !"
@@ -85,7 +85,7 @@ do
             do
                 echo ${line}
             done
-            #askContinue
+            askContinue
             exit 1
         else
             echo "phpcs file [$var] success !"

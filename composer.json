@@ -21,5 +21,11 @@
             "email": "giles.wang@qq.com"
         }
     ],
+    "scripts": {
+        "post-package-install": "./bin/phpcsc install",
+        "post-package-update": "./bin/phpcsc install",
+        "post-package-uninstall": "./bin/phpcsc remove"
+
+    },
     "minimum-stability": "dev"
 }

@@ -11,11 +11,10 @@ composer require --dev webergiles/php-csc
 
 # 指令
 
-指令 (composer exec -v phpcc {指令} | 用法
+指令 (composer exec -v phpcsc {指令} | 用法
 --- | --- |
-install |	安装php-cc
-remove  |	移除php-cc
-config	|   配置
+install |	安装php-csc
+remove  |	移除php-csc
 
 #注意事项
 phpcsc的pre-commit会覆盖原有的pre-commit，但仍然会将它备份为pre-commit.bak.{timestamp}。所以之前有在pre-commit中插入操作，请谨慎安装。
