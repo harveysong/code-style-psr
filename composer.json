@@ -22,9 +22,9 @@
         }
     ],
     "scripts": {
-        "post-update-cmd": "./bin/phpcsc install",
-        "post-install-cmd": "./bin/phpcsc install",
-        "post-package-uninstall": "./bin/phpcsc remove"
+        "post-package-update": "php ./bin/phpcsc install",
+        "post-package-install": "php ./bin/phpcsc install",
+        "post-package-uninstall": "php ./bin/phpcsc remove"
 
     },
     "minimum-stability": "dev"
