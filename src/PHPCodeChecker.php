@@ -8,35 +8,34 @@
 
 namespace WeberGiles\MountHooks;
 
+defined('DS') || define('DS', DIRECTORY_SEPARATOR); // 目录分隔符简写
+
 class PHPCodeChecker
 {
     protected static $DS =  DIRECTORY_SEPARATOR;
 
     public static function hookInstall()
     {
-        self::checkEnvironment();
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            self::installWindows();
-        } else {
-            self::installNoWindows();
-        }
+        $os = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'author';
+        self::checkEnvironment($os);
     }
 
     /**
-     * 检测本地环境
+     * 挂载git hook
+     * @param string $os 默认环境 winodws
      */
-    private static function checkEnvironment()
+    private static function checkEnvironment($os = 'windows')
     {
         # check git
         echo "Checking git repository...\n";
-        if (!is_dir(".". self::$DS .".git")) {
+        if (!is_dir(".". DS .".git")) {
             echo "Your project has not been init by git! Please check it...\n";
             exit(1);
         }
 
         # check phplint
         echo "Checking phplint install...\n";
-        exec('.'. self::$DS .'vendor'. self::$DS .'bin'. self::$DS .'phplint --version', $phpLintCheckRs, $returnVar);
+        exec('.'. DS .'vendor'. DS .'bin'. DS .'phplint --version', $phpLintCheckRs, $returnVar);
         if ($returnVar) {
             echo "Checking phplint failed! Please install phplint first!";
             exit(1);
@@ -47,7 +46,7 @@ class PHPCodeChecker
 
         # check phpcs
         echo "Checking phpcs install...\n";
-        exec('.'. self::$DS .'vendor'. self::$DS .'bin'. self::$DS .'phpcs --version', $phpCsCheckRs, $returnVar);
+        exec('.'. DS .'vendor'. DS .'bin'. DS .'phpcs --version', $phpCsCheckRs, $returnVar);
         if ($returnVar) {
             echo "Checking phpcs failed! Please install phpcs first!";
             exit(1);
@@ -55,49 +54,36 @@ class PHPCodeChecker
             echo "Checking phpcs success!\n";
             echo $phpCsCheckRs[0] . "\n";
         }
-    }
 
-    /**
-     * 挂载非Windows机器的git hooks
-     */
-    private static function installNoWindows()
-    {
-        # check&&back pre-commit
-        if (is_file('./.git/hooks/pre-commit')
-            && md5_file('./.git/hooks/pre-commit') != md5_file('./vendor/webergiles/php-csc/pre-commit')) {
-            system('mv ./.git/hooks/pre-commit ./.git/hooks/pre-commit.bak.' . time());
-        }
-        if (is_file('./.git/hooks/pre-commit')
-            && md5_file('./.git/hooks/pre-commit') == md5_file('./vendor/webergiles/php-csc/pre-commit')) {
-            echo "php-csc install success!\n";
-            exit(0);
-        }
+        if (is_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit')) {
+            $fileOldMd5 = md5_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit');
 
-        system('cp ./vendor/webergiles/php-csc/src/pre-commit ./.git/hooks');
-        system('chmod +x .git/hooks/pre-commit');
+            $fileNewMd5 = $os  == 'windows'
+                ? md5_file('.'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit.win')
+                : md5_file('.'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit');
 
-        echo "php-csc install success!\n";
-        exit(0);
-    }
-
-    /**
-     * 挂载非Windows机器的git hooks
-     */
-    private static function installWindows()
-    {
-        # check&&back pre-commit
-        if (is_file('.\.git\hooks\pre-commit')
-            && md5_file('.\.git\hooks\pre-commit') != md5_file('.\vendor\webergiles\php-csc\pre-commit')) {
-            system('xcopy /s /f /y .\.git\hooks\pre-commit .\.git\hooks\pre-commit.bak.' . time());
-        }
-        if (is_file('.\.git\hooks\pre-commit')
-            && md5_file('.\.git\hooks\pre-commit') == md5_file('.\vendor\webergiles\php-csc\pre-commit')) {
-            echo "php-csc install success!\n";
-            exit(0);
+            if ($fileOldMd5 == $fileNewMd5) {
+                echo "php-csc install success!\n";
+                exit(0);
+            } else {
+                if ($os == 'windows') {
+                    system('xcopy /s /f /y
+                     .'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit
+                      .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.'. time());
+                } else {
+                    system('mv .'. DS .'.git'. DS .'hooks'. DS .'pre-commit 
+                    .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
+                }
+            }
         }
 
-        system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.win" ".git\hooks\pre-commit"');
-        system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.ps1" ".git\hooks\pre-commit.ps1"');
+        if ($os == 'windows') {
+            system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.win" ".git\hooks\pre-commit"');
+            system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.ps1" ".git\hooks\pre-commit.ps1"');
+        } else {
+            system('cp ./vendor/webergiles/php-csc/src/pre-commit ./.git/hooks');
+            system('chmod +x .git/hooks/pre-commit');
+        }
 
         echo "php-csc install success!\n";
         exit(0);
