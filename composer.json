@@ -21,6 +21,11 @@
             "email": "giles.wang@qq.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "WeberGiles\\MountHooks\\": "src/"
+        }
+    },
     "scripts": {
         "post-package-update": "php ./bin/phpcsc install",
         "post-package-install": "php ./bin/phpcsc install",

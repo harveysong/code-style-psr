@@ -6,7 +6,7 @@
  * Time: 09:35
  */
 
-namespace MountHooks;
+namespace WeberGiles\MountHooks;
 
 class PHPCodeChecker
 {
