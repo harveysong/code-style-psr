@@ -26,12 +26,10 @@ class PHPCodeChecker
         if ($os == 'windows') {
             system('ren .git'. DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
             echo "Remove phpcsc success!\n";
-            exit(0);
         } else {
             $oldHook ='.'. DS .'.git'. DS .'hooks'. DS .'pre-commit';
             system('mv '. $oldHook .' .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
             echo "Remove phpcsc success!\n";
-            exit(0);
         }
     }
 

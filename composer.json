@@ -26,11 +26,5 @@
             "WeberGiles\\MountHooks\\": "src/"
         }
     },
-    "scripts": {
-        "post-package-update": "php ./bin/phpcsc install",
-        "post-package-install": "php ./bin/phpcsc install",
-        "post-package-uninstall": "php ./bin/phpcsc remove"
-
-    },
     "minimum-stability": "dev"
 }
