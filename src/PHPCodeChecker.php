@@ -15,7 +15,6 @@ class PHPCodeChecker
     public static function hookInstall()
     {
         self::checkEnvironment();
-
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             self::installWindows();
         } else {
