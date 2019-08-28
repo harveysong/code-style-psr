@@ -3,7 +3,7 @@
 PHP code style check 利用git hook、phplint、phpcs在git commit的时候对php代码进行语法检测、代码风格检查，如果有问题，不允许提交。
 
 # 使用
-composer require --dev webergiles/php-csc
+composer require --dev webergiles/php-csc "0.*"
 
 安装成功之后执行`composer exec phpcsc install`该命令会检查phplint、phpcs的安装情况，并将git原有的pre-commit钩子备份，再将php-cc的pre-commit钩子拷贝至.git/hooks中。
 
@@ -19,22 +19,12 @@ remove  |	移除php-csc
 # composer 自动挂载
 在主项目composer 文件中增加事件
 ```json
-"post-package-install": [
+"post-autoload-dump": [
     "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
 ],
-"post-package-update": [
-    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
-],
-"post-install-cmd": [
-    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
-],
-"post-update-cmd": [
-    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
-],
-"post-package-uninstall": [
+"pre-package-uninstall": [
     "WeberGiles\\MountHooks\\PHPCodeChecker::hookUnstall"
 ]
-
 ```
 
 #注意事项
