@@ -22,10 +22,10 @@
 ### SETTINGS ###
 
 # Path to the php.exe
-$php_exe = "C:\php\php.exe";
+$php_exe = "php.exe";
 
 # Path to the phpcs
-$php_cs = "phpcs";
+$php_cs = "vendor\bin\phpcs";
 
 # Extensions of the PHP files
 $php_ext = 'php|module|inc|install|test|profile|theme|txt|class';
@@ -96,7 +96,7 @@ function php_cs_check {
             if ($file -match "test\/") {
                 write-host "SKIPPED! (test file)" -foregroundcolor "darkGreen" -backgroundcolor "black"
             } else {
-                $errors = & $php_cs --standard=Drupal $file
+                $errors = & $php_cs --standard=PSR12 --colors --encoding=utf-8 -n -p $file
 
                 # Outputs the error
                 if ($LastExitCode) {

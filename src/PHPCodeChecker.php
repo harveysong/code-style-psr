@@ -57,29 +57,24 @@ class PHPCodeChecker
 
         if (is_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit')) {
             $fileOldMd5 = md5_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit');
-
             $fileNewMd5 = $os  == 'windows'
                 ? md5_file('.'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit.win')
                 : md5_file('.'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit');
-
             if ($fileOldMd5 == $fileNewMd5) {
                 echo "php-csc install success!\n";
                 exit(0);
             } else {
                 if ($os == 'windows') {
-                    system('xcopy /s /f /y
-                     .'. DS .'vendor'. DS .'webergiles'. DS .'php-csc'. DS .'src'. DS .'pre-commit
-                      .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.'. time());
+                    system('ren .git'. DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
                 } else {
-                    system('mv .'. DS .'.git'. DS .'hooks'. DS .'pre-commit 
-                    .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
+                    $oldHook ='.'. DS .'.git'. DS .'hooks'. DS .'pre-commit';
+                    system('mv '. $oldHook .' .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
                 }
             }
         }
-
         if ($os == 'windows') {
-            system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.win" ".git\hooks\pre-commit"');
-            system('xcopy /s /f /y "vendor\webergiles\php-csc\src\pre-commit.ps1" ".git\hooks\pre-commit.ps1"');
+            system('copy vendor\webergiles\php-csc\src\pre-commit.win .git\hooks\pre-commit');
+            system('copy vendor\webergiles\php-csc\src\pre-commit.ps1 .git\hooks\pre-commit.ps1');
         } else {
             system('cp ./vendor/webergiles/php-csc/src/pre-commit ./.git/hooks');
             system('chmod +x .git/hooks/pre-commit');
