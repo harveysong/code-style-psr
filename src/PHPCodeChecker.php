@@ -20,6 +20,21 @@ class PHPCodeChecker
         self::checkEnvironment($os);
     }
 
+    public static function hookUnstall()
+    {
+        $os = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'author';
+        if ($os == 'windows') {
+            system('ren .git'. DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
+            echo "Remove phpcsc success!\n";
+            exit(0);
+        } else {
+            $oldHook ='.'. DS .'.git'. DS .'hooks'. DS .'pre-commit';
+            system('mv '. $oldHook .' .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
+            echo "Remove phpcsc success!\n";
+            exit(0);
+        }
+    }
+
     /**
      * 挂载git hook
      * @param string $os 默认环境 winodws

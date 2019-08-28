@@ -16,5 +16,26 @@ composer require --dev webergiles/php-csc
 install |	安装php-csc
 remove  |	移除php-csc
 
+# composer 自动挂载
+在主项目composer 文件中增加事件
+```json
+"post-package-install": [
+    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
+],
+"post-package-update": [
+    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
+],
+"post-install-cmd": [
+    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
+],
+"post-update-cmd": [
+    "WeberGiles\\MountHooks\\PHPCodeChecker::hookInstall"
+],
+"post-package-uninstall": [
+    "WeberGiles\\MountHooks\\PHPCodeChecker::hookUnstall"
+]
+
+```
+
 #注意事项
 phpcsc的pre-commit会覆盖原有的pre-commit，但仍然会将它备份为pre-commit.bak.{timestamp}。所以之前有在pre-commit中插入操作，请谨慎安装。

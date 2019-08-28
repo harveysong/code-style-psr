@@ -79,6 +79,6 @@ function remove()
         exec('rm -f .git/hooks/pre-commit');
     }
 
-    echo "Remove phpcc success!\n";
+    echo "Remove phpcsc success!\n";
     exit(0);
 }
