@@ -2,24 +2,7 @@
 #
 # PHP Syntax Check for Git pre-commit hook for Windows PowerShell
 #
-# Author: Vojtech Kusy &lt;wojtha@gmail.com&gt;
-# Author: Chuck "MANCHUCK" Reeves &lt;chuck@manchuck.com&gt;
-# Author: Andrew 'Ziggy' Dempster
-#
 ###############################################################################
-
-### INSTRUCTIONS ###
-
-# Place the code to file "pre-commit" (no extension) and add it to the one of
-# the following locations:
-# 1) Repository hooks folder - C:\Path\To\Repository\.git\hooks
-# 2) User profile template   - C:\Users\&lt;USER&gt;\.git\templates\hooks
-# 3) Global shared templates - C:\Program Files (x86)\Git\share\git-core\templates\hooks
-#
-# The hooks from user profile or from shared templates are copied from there
-# each time you create or clone new repository.
-
-### SETTINGS ###
 
 # Path to the php.exe
 $php_exe = "php.exe";
