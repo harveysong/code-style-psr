@@ -4,8 +4,8 @@ PHP code style check 利用git hook、phplint、phpcs在git commit的时候对ph
 
 # 前置要求
  - Git已安装
- - PHP安装并全局可用 下载最新版php [php-7.3.8-nts-Win32-VC15-x64.zip](https://windows.php.net/downloads/releases/php-7.3.8-nts-Win32-VC15-x64.zip)
- - Composer可用 [下载 Composer](https://getcomposer.org/Composer-Setup.exe)
+ - PHP安装并全局可用 Windows下载最新版php [php-7.3.8-nts-Win32-VC15-x64.zip](https://windows.php.net/downloads/releases/php-7.3.8-nts-Win32-VC15-x64.zip)
+ - Composer可用 [Windows下载 Composer](https://getcomposer.org/Composer-Setup.exe)
 
 ## 检测原理 及流程
 - 每次git commit前是有hooks可以触发
