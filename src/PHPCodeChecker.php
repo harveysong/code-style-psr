@@ -20,7 +20,7 @@ class PHPCodeChecker
         self::checkEnvironment($os);
     }
 
-    public static function hookUnstall()
+    public static function hookUninstall()
     {
         $os = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'author';
         if ($os == 'windows') {
