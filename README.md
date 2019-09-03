@@ -43,7 +43,7 @@ remove  |	移除php-csc
 ```
 可以在没次执行composer update 的时候去检测钩子挂载情况,自动挂载钩子
 
-#注意事项
+# 注意事项
 - phpcsc的pre-commit会覆盖原有的pre-commit，但仍然会将它备份为pre-commit.bak.{timestamp}。所以之前有在pre-commit中插入操作，请谨慎安装。
 
 - Windows版本的PHPStorm 默认回车符\r\n 这是不符合PSR2 规范的 需要设置为\n 
