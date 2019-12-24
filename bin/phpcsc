@@ -1,11 +1,16 @@
 #!/usr/bin/env php
 <?php
 
-if (count($argv) < 2) {
+//支持的提交动作
+$action = [
+    'install', 'remove'
+];
+
+if (empty($argv[1]) || !in_array($argv[1], $action)) {
     print<<<EOT
-install:    install php-csc,add pre-commit to .git/hooks,and rename the old pre-commit file to pre-commit.bak
-remove:     remove php-csc,remove .git/hooks/pre-commit,and mv pre-commit.bak to pre-commit
-config:     config php-csc,[phpcsc config key value] is to set config item [key] to value [value]
+不支持的提交动作，请使用以下参数提交
+install:    安装php-csc检测钩子到.git/hooks【copy pre-commit 到 .git/hooks/pre-commit】 并且备份原有钩子文件
+remove:     删除php-csc检测钩子 .git/hooks/pre-commit 删除钩子不会回复原有备份文件
 EOT;
     exit(1);
 }
@@ -17,36 +22,7 @@ switch ($argv[1]) {
     case 'remove':
         remove();
         break;
-    case 'config':
-        if (isset($argv[2]) && isset($argv[3])) {
-            if ('phpcs_standard' == $argv[2] && !in_array(mb_strtoupper($argv[3]), ['MYSOURCE', 'PEAR', 'PSR1', 'PSR12', 'PSR2', 'SQUIZ', 'ZEND'])) {
-                echo "phpcs standard error! \n";
-                exit(0);
-            }
-            write_ini_file($argv[2], $argv[3]);
-            exit(0);
-        } elseif (isset($argv[2]) && !isset($argv[3])) {
-            $config_items = get_ini_file();
-            if (isset($config_items[$argv[2]])) {
-                echo $config_items[$argv[2]] . "\n";
-            } else {
-                echo "No config for key [{$argv[2]}]\n";
-            }
-            exit(0);
-        } else {
-            echo 'Need more params' . "\n";
-        }
-        break;
-    default:
-        echo 'No such command...' . "\n";
-        break;
 }
-print <<<EOT
-install:    install php-csc,add pre-commit to .git/hooks,and rename the old pre-commit file to pre-commit.bak
-remove:     remove php-csc,remove .git/hooks/pre-commit,and mv pre-commit.bak to pre-commit
-config:     config item-key [set-value]
-EOT;
-exit(0);
 
 function install()
 {
@@ -59,32 +35,39 @@ function install()
 
     # check phplint
     echo "Checking phplint install...\n";
-    exec('./vendor/bin/phplint --version', $phplint_check_rs, $return_var);
-    if ($return_var) {
+    exec('./vendor/bin/phplint --version', $phpLintCheckRs, $returnVar);
+    if ($returnVar) {
         echo "Checking phplint failed! Please install phplint first!";
         exit(1);
     } else {
         echo "Checking phplint success!\n";
-        echo $phplint_check_rs[0] . "\n";
+        echo $phpLintCheckRs[0] . "\n";
     }
 
     # check phpcs
     echo "Checking phpcs install...\n";
-    exec('phpcs --version', $phpcs_check_rs, $return_var);
-    if ($return_var) {
+    exec('phpcs --version', $phpCsCheckRs, $returnVar);
+    if ($returnVar) {
         echo "Checking phpcs failed! Please install phpcs first!";
         exit(1);
     } else {
         echo "Checking phpcs success!\n";
-        echo $phpcs_check_rs[0] . "\n";
+        echo $phpCsCheckRs[0] . "\n";
     }
-    # check&&mv pre-commit
-    if (is_file('./.git/hooks/pre-commit')) {
+    # check&&back pre-commit
+    if (is_file('./.git/hooks/pre-commit')
+        && md5_file('./.git/hooks/pre-commit') != md5_file('./vendor/giles/php-csc/pre-commit')) {
         exec('mv ./.git/hooks/pre-commit ./.git/hooks/pre-commit.bak.' . time());
     }
-    exec('cp ./vendor/webergiles/php-csc/pre-commit ./.git/hooks');
+    if (is_file('./.git/hooks/pre-commit')
+        && md5_file('./.git/hooks/pre-commit') == md5_file('./vendor/giles/php-csc/pre-commit')) {
+        echo "php-csc install success!\n";
+        exit(0);
+    }
 
-    echo "php-cc install success!\n";
+    exec('cp ./vendor/giles/php-csc/pre-commit ./.git/hooks');
+
+    echo "php-csc install success!\n";
     exit(0);
 }
 
@@ -96,42 +79,6 @@ function remove()
         exec('rm -f .git/hooks/pre-commit');
     }
 
-    # check old file
-    echo "Retrieve the old pre-commit file...\n";
-    if (is_file('.git/hooks/pre-commit.bak')) {
-        exec('mv .git/hooks/pre-commit.bak .git/hooks/pre-commit');
-    }
-
-    echo "Remove phpcc success!\n";
+    echo "Remove phpcsc success!\n";
     exit(0);
-}
-
-function get_ini_file()
-{
-    $file_name = './vendor/webergiles/php-csc/phpcsc.ini';
-    $str = file_get_contents($file_name);
-    $ini_list = explode("\n", $str);
-    $ini_items = array();
-    foreach ($ini_list as $item) {
-        $one_item = explode("=", $item);
-        if (isset($one_item[0]) && isset($one_item[1])) {
-            $ini_items[trim($one_item[0])] = trim($one_item[1]);
-        }
-    }
-    return $ini_items;
-}
-
-function write_ini_file($key, $value)
-{
-    $config_file_path = './vendor/webergiles/php-csc/phpcsc.ini';
-    $content = file_get_contents($config_file_path);
-    if (strpos($content, "$key=")) {
-        $content = preg_replace("/$key=.*/", "$key=$value", $content);
-    } else {
-        $content .= "\n";
-        $content .= "$key=$value";
-    }
-    $file = fopen($config_file_path, 'w');
-    fwrite($file, $content);
-    return true;
 }
