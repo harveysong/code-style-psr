@@ -89,7 +89,8 @@ class PHPCodeChecker
             system('copy vendor\giles\php-csc\src\pre-commit.win .git\hooks\pre-commit');
             system('copy vendor\giles\php-csc\src\pre-commit.ps1 .git\hooks\pre-commit.ps1');
         } else {
-            system('cp ./vendor/giles/php-csc/src/pre-commit ./.git/hooks');
+            system('cp ./vendor/giles/php-csc/src/pre-commit ./.git/hooks/');
+            system('tr -d \'\r\' < ./vendor/giles/php-csc/src/pre-commit > ./.git/hooks/pre-commit');
             system('chmod +x .git/hooks/pre-commit');
         }
 
