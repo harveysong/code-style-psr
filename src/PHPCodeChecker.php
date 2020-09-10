@@ -22,13 +22,19 @@ class PHPCodeChecker
 
     public static function hookUninstall()
     {
+        $prefix = '.';
+        if (!is_dir($prefix. DS .".git")) {
+            $prefix = '..';
+        }
+        $gitPath = $prefix . DS . ".git";
+
         $os = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'author';
         if ($os == 'windows') {
-            system('ren .git'. DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
+            system('ren '. $gitPath . DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
             echo "Remove phpcsc success!\n";
         } else {
-            $oldHook ='.'. DS .'.git'. DS .'hooks'. DS .'pre-commit';
-            system('mv '. $oldHook .' .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
+            $oldHook = $gitPath. DS .'hooks'. DS .'pre-commit';
+            system('mv '. $oldHook .' '. $gitPath . DS .'hooks'. DS .'pre-commit.bak.' . time());
             echo "Remove phpcsc success!\n";
         }
     }
@@ -39,9 +45,15 @@ class PHPCodeChecker
      */
     private static function checkEnvironment($os = 'windows')
     {
+        $prefix = '.';
+        if (!is_dir($prefix. DS .".git")) {
+            $prefix = '..';
+        }
+        $gitPath = $prefix . DS . ".git";
+
         # check git
         echo "Checking git repository...\n";
-        if (!is_dir(".". DS .".git")) {
+        if (!is_dir($gitPath)) {
             echo "Your project has not been init by git! Please check it...\n";
             exit(1);
         }
@@ -68,8 +80,8 @@ class PHPCodeChecker
             echo $phpCsCheckRs[0] . "\n";
         }
 
-        if (is_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit')) {
-            $fileOldMd5 = md5_file('.'. DS .'.git'. DS .'hooks'. DS .'pre-commit');
+        if (is_file($gitPath. DS .'hooks'. DS .'pre-commit')) {
+            $fileOldMd5 = md5_file($gitPath. DS .'hooks'. DS .'pre-commit');
             $fileNewMd5 = $os  == 'windows'
                 ? md5_file('.'. DS .'vendor'. DS .'giles'. DS .'php-csc'. DS .'src'. DS .'pre-commit.win')
                 : md5_file('.'. DS .'vendor'. DS .'giles'. DS .'php-csc'. DS .'src'. DS .'pre-commit');
@@ -78,20 +90,20 @@ class PHPCodeChecker
                 exit(0);
             } else {
                 if ($os == 'windows') {
-                    system('ren .git'. DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
+                    system('ren '. $gitPath . DS .'hooks'. DS .'pre-commit pre-commit.bak.'. time());
                 } else {
-                    $oldHook ='.'. DS .'.git'. DS .'hooks'. DS .'pre-commit';
-                    system('mv '. $oldHook .' .'. DS .'.git'. DS .'hooks'. DS .'pre-commit.bak.' . time());
+                    $oldHook =$gitPath. DS .'hooks'. DS .'pre-commit';
+                    system('mv '. $oldHook .' '. $gitPath. DS .'hooks'. DS .'pre-commit.bak.' . time());
                 }
             }
         }
         if ($os == 'windows') {
-            system('copy vendor\giles\php-csc\src\pre-commit.win .git\hooks\pre-commit');
-            system('copy vendor\giles\php-csc\src\pre-commit.ps1 .git\hooks\pre-commit.ps1');
+            system('copy vendor\giles\php-csc\src\pre-commit.win '.$gitPath.'\hooks\pre-commit');
+            system('copy vendor\giles\php-csc\src\pre-commit.ps1 '.$gitPath.'\hooks\pre-commit.ps1');
         } else {
-            system('cp ./vendor/giles/php-csc/src/pre-commit ./.git/hooks/');
-            system('tr -d \'\r\' < ./vendor/giles/php-csc/src/pre-commit > ./.git/hooks/pre-commit');
-            system('chmod +x .git/hooks/pre-commit');
+            system('cp ./vendor/giles/php-csc/src/pre-commit '.$gitPath.'/hooks/');
+            system('tr -d \'\r\' < ./vendor/giles/php-csc/src/pre-commit > '.$gitPath.'/hooks/pre-commit');
+            system('chmod +x '.$gitPath.'/hooks/pre-commit');
         }
 
         echo "php-csc install success!\n";
